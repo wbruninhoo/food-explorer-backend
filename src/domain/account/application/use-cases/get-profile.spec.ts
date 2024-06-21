@@ -20,8 +20,6 @@ describe('Get Profile', () => {
 
     const result = await sut.execute({ userId: user.id.toString() })
 
-    console.log(result.value)
-
     expect(result.isRight()).toBe(true)
     expect(result.value).toEqual({
       user: inMemoryUsersRepository.items[0],
