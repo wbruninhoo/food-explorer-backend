@@ -24,8 +24,18 @@ export class Dish extends Entity<DishProps> {
     return this.props.imageUrl
   }
 
+  set imageUrl(value: string) {
+    this.props.imageUrl = value
+    this.touch()
+  }
+
   get imageId() {
     return this.props.imageId
+  }
+
+  set imageId(value: UniqueEntityID) {
+    this.props.imageId = value
+    this.touch()
   }
 
   get categoryId() {
@@ -36,16 +46,36 @@ export class Dish extends Entity<DishProps> {
     return this.props.name
   }
 
+  set name(value: string) {
+    this.props.name = value
+    this.touch()
+  }
+
   get description() {
     return this.props.description
+  }
+
+  set description(value: string) {
+    this.props.description = value
+    this.touch()
   }
 
   get priceInCents() {
     return this.props.priceInCents
   }
 
+  set priceInCents(value: number) {
+    this.props.priceInCents = value
+    this.touch()
+  }
+
   get ingredients() {
     return this.props.ingredients
+  }
+
+  set ingredients(value: string[]) {
+    this.props.ingredients = value
+    this.touch()
   }
 
   get createdAt() {
@@ -54,6 +84,10 @@ export class Dish extends Entity<DishProps> {
 
   get updatedAt() {
     return this.props.updatedAt
+  }
+
+  private touch() {
+    this.props.updatedAt = new Date()
   }
 
   static create(props: Optional<DishProps, 'createdAt'>, id?: UniqueEntityID) {

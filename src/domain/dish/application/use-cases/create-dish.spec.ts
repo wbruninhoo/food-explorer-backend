@@ -1,4 +1,5 @@
 import { randomUUID } from 'crypto'
+import { InMemoryDishImagesRepository } from 'test/repositories/in-memory-dish-images-repository'
 import { InMemoryDishesRepository } from 'test/repositories/in-memory-dishes-repository'
 
 import { faker } from '@faker-js/faker'
@@ -6,12 +7,16 @@ import { faker } from '@faker-js/faker'
 import { CreateDishUseCase } from './create-dish'
 
 let inMemoryDishesRepository: InMemoryDishesRepository
+let inMemoryDishImagesRepository: InMemoryDishImagesRepository
 
 let sut: CreateDishUseCase
 
 describe('Create Dish', () => {
   beforeEach(() => {
-    inMemoryDishesRepository = new InMemoryDishesRepository()
+    inMemoryDishImagesRepository = new InMemoryDishImagesRepository()
+    inMemoryDishesRepository = new InMemoryDishesRepository(
+      inMemoryDishImagesRepository,
+    )
 
     sut = new CreateDishUseCase(inMemoryDishesRepository)
   })
