@@ -10,6 +10,7 @@ interface CreateDishUseCaseRequest {
   ingredients: string[]
   priceInCents: number
   imageUrl: string
+  imageId: string
   categoryId: string
 }
 
@@ -32,6 +33,7 @@ export class CreateDishUseCase {
       ingredients,
       priceInCents,
       imageUrl,
+      imageId,
       categoryId,
     } = request
 
@@ -41,6 +43,7 @@ export class CreateDishUseCase {
       priceInCents,
       ingredients,
       imageUrl,
+      imageId: new UniqueEntityID(imageId),
       categoryId: new UniqueEntityID(categoryId),
     })
 

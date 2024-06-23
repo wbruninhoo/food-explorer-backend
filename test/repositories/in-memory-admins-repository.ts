@@ -7,11 +7,7 @@ export class InMemoryAdminsRepository implements AdminsRepository {
   async findByEmail(email: string): Promise<Admin | null> {
     const admin = this.items.find((item) => item.email === email)
 
-    if (!admin) {
-      return null
-    }
-
-    return admin
+    return admin || null
   }
 
   async create(admin: Admin): Promise<void> {

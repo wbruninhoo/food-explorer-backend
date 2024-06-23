@@ -5,6 +5,7 @@ import { Optional } from '@/core/types/optional'
 export interface DishProps {
   dishId?: UniqueEntityID
   imageUrl: string
+  imageId: UniqueEntityID
   categoryId: UniqueEntityID
   name: string
   description: string
@@ -21,6 +22,10 @@ export class Dish extends Entity<DishProps> {
 
   get imageUrl() {
     return this.props.imageUrl
+  }
+
+  get imageId() {
+    return this.props.imageId
   }
 
   get categoryId() {

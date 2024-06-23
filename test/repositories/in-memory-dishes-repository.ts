@@ -7,23 +7,22 @@ export class InMemoryDishesRepository implements DishesRepository {
   async findById(id: string): Promise<Dish | null> {
     const dish = this.items.find((item) => item.id.toString() === id)
 
-    if (!dish) {
-      return null
-    }
-
-    return dish
+    return dish || null
   }
 
-  async findManyByQuery(query: string): Promise<Dish[] | null> {
-    const dishes = this.items
-      .filter((item) => item.name.toLowerCase().includes(query.toLowerCase()))
-      .sort((a, b) => {
-        return b.createdAt.getTime() - a.createdAt.getTime()
-      })
-
-    if (!dishes) {
-      return null
-    }
+  async findManyByQuery(query: string): Promise<Dish[] | []> {
+    const dishes =
+      this.items
+        .filter(
+          (item) =>
+            item.name.toLowerCase().includes(query.toLowerCase()) ||
+            item.ingredients.some((ingredient) =>
+              ingredient.toLowerCase().includes(query.toLowerCase()),
+            ),
+        )
+        .sort((a, b) => {
+          return b.createdAt.getTime() - a.createdAt.getTime()
+        }) || []
 
     return dishes
   }

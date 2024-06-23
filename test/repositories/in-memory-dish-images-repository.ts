@@ -9,11 +9,7 @@ export class InMemoryDishImagesRepository implements DishImagesRepository {
       (item) => item.dishId.toString() === dishId,
     )
 
-    if (!dishImage) {
-      return null
-    }
-
-    return dishImage
+    return dishImage || null
   }
 
   async deleteByDishId(dishId: string): Promise<void> {

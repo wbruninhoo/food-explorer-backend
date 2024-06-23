@@ -7,11 +7,7 @@ export class InMemoryCustomersRepository implements CustomersRepository {
   async findByEmail(email: string): Promise<Customer | null> {
     const customer = this.items.find((item) => item.email === email)
 
-    if (!customer) {
-      return null
-    }
-
-    return customer
+    return customer || null
   }
 
   async create(customer: Customer): Promise<void> {
