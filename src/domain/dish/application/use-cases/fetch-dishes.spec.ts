@@ -19,7 +19,9 @@ describe('Fetch Dishes', () => {
   beforeEach(() => {
     inMemoryCategoriesRepository = new InMemoryCategoriesRepository()
     inMemoryDishImagesRepository = new InMemoryDishImagesRepository()
-    inMemoryDishesRepository = new InMemoryDishesRepository()
+    inMemoryDishesRepository = new InMemoryDishesRepository(
+      inMemoryDishImagesRepository,
+    )
     sut = new FetchDishesUseCase(inMemoryDishesRepository)
   })
 

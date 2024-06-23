@@ -1,8 +1,12 @@
 import { DishesRepository } from '@/domain/dish/application/repositories/dishes-repository'
 import { Dish } from '@/domain/dish/enterprise/entities/dish'
 
+import { InMemoryDishImagesRepository } from './in-memory-dish-images-repository'
+
 export class InMemoryDishesRepository implements DishesRepository {
   public items: Dish[] = []
+
+  constructor(private dishImagesRepository: InMemoryDishImagesRepository) {}
 
   async findById(id: string): Promise<Dish | null> {
     const dish = this.items.find((item) => item.id.toString() === id)
@@ -42,6 +46,7 @@ export class InMemoryDishesRepository implements DishesRepository {
 
     if (itemIndex >= 0) {
       this.items.splice(itemIndex, 1)
+      await this.dishImagesRepository.deleteByDishId(dish.id.toString())
     }
   }
 }
