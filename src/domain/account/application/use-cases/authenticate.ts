@@ -1,3 +1,5 @@
+import { inject, injectable } from 'tsyringe'
+
 import authConfig from '@/config/auth'
 import { Either, left, right } from '@/core/either'
 
@@ -19,18 +21,24 @@ type AuthenticateUseCaseResponse = Either<
   }
 >
 
+@injectable()
 export class AuthenticateUseCase {
   constructor(
+    @inject('UsersRepository')
     private usersRepository: UsersRepository,
+    @inject('HashComparer')
     private hashComparer: HashComparer,
+    @inject('Encrypter')
     private encrypter: Encrypter,
   ) {}
 
-  async execute({
-    email,
-    password,
-  }: AuthenticateUseCaseRequest): Promise<AuthenticateUseCaseResponse> {
+  async execute(
+    request: AuthenticateUseCaseRequest,
+  ): Promise<AuthenticateUseCaseResponse> {
+    const { email, password } = request
+
     const user = await this.usersRepository.findByEmail(email)
+
     if (!user) {
       return left(new InvalidCredentialsError())
     }
@@ -48,15 +56,15 @@ export class AuthenticateUseCase {
       Math.floor(Date.now() / 1000) +
       authConfig.accessTokenExpiresInMilliseconds / 1000
 
-    const expiresRefreshTokenInSeconds =
-      Math.floor(Date.now() / 1000) +
-      authConfig.refreshTokenExpiresInMilliseconds / 1000
-
     const accessToken = await this.encrypter.encrypt({
       sub: user.id.toString(),
       role: user.role,
       exp: expiresAccessTokenInSeconds,
     })
+
+    const expiresRefreshTokenInSeconds =
+      Math.floor(Date.now() / 1000) +
+      authConfig.refreshTokenExpiresInMilliseconds / 1000
 
     const refreshToken = await this.encrypter.encrypt({
       sub: user.id.toString(),

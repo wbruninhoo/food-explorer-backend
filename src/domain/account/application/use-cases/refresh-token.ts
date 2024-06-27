@@ -1,3 +1,5 @@
+import { inject, injectable } from 'tsyringe'
+
 import authConfig from '@/config/auth'
 import { Either, left, right } from '@/core/either'
 
@@ -17,9 +19,12 @@ type RefreshTokenUseCaseResponse = Either<
   }
 >
 
+@injectable()
 export class RefreshTokenUseCase {
   constructor(
+    @inject('Decrypter')
     private decrypter: Decrypter,
+    @inject('Encrypter')
     private encrypter: Encrypter,
   ) {}
 

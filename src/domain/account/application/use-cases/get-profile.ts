@@ -1,8 +1,10 @@
+import { inject, injectable } from 'tsyringe'
+
 import { Either, left, right } from '@/core/either'
+import { ResourceNotFoundError } from '@/domain/dish/application/use-cases/errors/resource-not-found-error'
 
 import { User } from '../../enterprise/entities/user'
 import { UsersRepository } from '../repositories/users-repository'
-import { ResourceNotFoundError } from './errors/resource-not-found-error'
 
 interface GetProfileUseCaseRequest {
   userId: string
@@ -15,8 +17,12 @@ type GetProfileUseCaseResponse = Either<
   }
 >
 
+@injectable()
 export class GetProfileUseCase {
-  constructor(private usersRepository: UsersRepository) {}
+  constructor(
+    @inject('UsersRepository')
+    private usersRepository: UsersRepository,
+  ) {}
 
   async execute(
     request: GetProfileUseCaseRequest,

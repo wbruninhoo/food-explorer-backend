@@ -1,12 +1,8 @@
 import { DishesRepository } from '@/domain/dish/application/repositories/dishes-repository'
 import { Dish } from '@/domain/dish/enterprise/entities/dish'
 
-import { InMemoryDishImagesRepository } from './in-memory-dish-images-repository'
-
 export class InMemoryDishesRepository implements DishesRepository {
   public items: Dish[] = []
-
-  constructor(private dishImagesRepository: InMemoryDishImagesRepository) {}
 
   async findById(id: string): Promise<Dish | null> {
     const dish = this.items.find((item) => item.id.toString() === id)
@@ -14,21 +10,17 @@ export class InMemoryDishesRepository implements DishesRepository {
     return dish || null
   }
 
-  async findManyByQuery(query: string): Promise<Dish[] | []> {
-    const dishes =
-      this.items
-        .filter(
-          (item) =>
-            item.name.toLowerCase().includes(query.toLowerCase()) ||
-            item.ingredients.some((ingredient) =>
-              ingredient.toLowerCase().includes(query.toLowerCase()),
-            ),
-        )
-        .sort((a, b) => {
-          return b.createdAt.getTime() - a.createdAt.getTime()
-        }) || []
-
-    return dishes
+  async findManyByQuery(query: string, page: number) {
+    return this.items
+      .filter(
+        (item) =>
+          item.name.toLowerCase().includes(query.toLowerCase()) ||
+          item.ingredients.some((ingredient) =>
+            ingredient.toLowerCase().includes(query.toLowerCase()),
+          ),
+      )
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice((page - 1) * 20, page * 20)
   }
 
   async save(dish: Dish): Promise<void> {
@@ -46,7 +38,6 @@ export class InMemoryDishesRepository implements DishesRepository {
 
     if (itemIndex >= 0) {
       this.items.splice(itemIndex, 1)
-      await this.dishImagesRepository.deleteByDishId(dish.id.toString())
     }
   }
 }

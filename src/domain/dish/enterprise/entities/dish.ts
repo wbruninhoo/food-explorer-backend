@@ -5,14 +5,13 @@ import { Optional } from '@/core/types/optional'
 export interface DishProps {
   dishId?: UniqueEntityID
   imageUrl: string
-  imageId: UniqueEntityID
   categoryId: UniqueEntityID
   name: string
   description: string
   priceInCents: number
   ingredients: string[]
   createdAt: Date
-  updatedAt?: Date
+  updatedAt?: Date | null
 }
 
 export class Dish extends Entity<DishProps> {
@@ -26,15 +25,6 @@ export class Dish extends Entity<DishProps> {
 
   set imageUrl(value: string) {
     this.props.imageUrl = value
-    this.touch()
-  }
-
-  get imageId() {
-    return this.props.imageId
-  }
-
-  set imageId(value: UniqueEntityID) {
-    this.props.imageId = value
     this.touch()
   }
 

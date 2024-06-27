@@ -9,7 +9,6 @@ export function makeDish(
   return Dish.create(
     {
       categoryId: new UniqueEntityID(),
-      imageId: new UniqueEntityID(),
       name: faker.lorem.words(),
       description: faker.lorem.sentences(),
       priceInCents: faker.number.int(),

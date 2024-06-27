@@ -1,3 +1,5 @@
+import { inject, injectable } from 'tsyringe'
+
 import { Either, right } from '@/core/either'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
@@ -10,7 +12,6 @@ interface CreateDishUseCaseRequest {
   ingredients: string[]
   priceInCents: number
   imageUrl: string
-  imageId: string
   categoryId: string
 }
 
@@ -21,8 +22,11 @@ type CreateDishUseCaseResponse = Either<
   }
 >
 
+@injectable()
 export class CreateDishUseCase {
-  constructor(private dishesRepository: DishesRepository) {}
+  constructor(
+    @inject('DishesRepository') private dishesRepository: DishesRepository,
+  ) {}
 
   async execute(
     request: CreateDishUseCaseRequest,
@@ -33,7 +37,6 @@ export class CreateDishUseCase {
       ingredients,
       priceInCents,
       imageUrl,
-      imageId,
       categoryId,
     } = request
 
@@ -43,7 +46,6 @@ export class CreateDishUseCase {
       priceInCents,
       ingredients,
       imageUrl,
-      imageId: new UniqueEntityID(imageId),
       categoryId: new UniqueEntityID(categoryId),
     })
 

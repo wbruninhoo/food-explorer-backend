@@ -9,7 +9,11 @@ export class InMemoryCategoriesRepository implements CategoriesRepository {
       (item) => item.name.toLowerCase() === name.toLowerCase(),
     )
 
-    return category || null
+    if (!category) {
+      return null
+    }
+
+    return category
   }
 
   async findMany(): Promise<Category[]> {

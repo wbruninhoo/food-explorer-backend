@@ -5,5 +5,5 @@ export interface DishesRepository {
   save(dish: Dish): Promise<void>
   delete(dish: Dish): Promise<void>
   findById(id: string): Promise<Dish | null>
-  findManyByQuery(query: string): Promise<Dish[] | []>
+  findManyByQuery(query: string, page: number): Promise<Dish[]>
 }

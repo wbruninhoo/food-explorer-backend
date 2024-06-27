@@ -1,3 +1,5 @@
+import { inject, injectable } from 'tsyringe'
+
 import { Either, left, right } from '@/core/either'
 
 import { Admin } from '../../enterprise/entities/admin'
@@ -18,9 +20,12 @@ type RegisterAdminUseCaseResponse = Either<
   }
 >
 
+@injectable()
 export class RegisterAdminUseCase {
   constructor(
+    @inject('AdminsRepository')
     private adminsRepository: AdminsRepository,
+    @inject('HashGenerator')
     private hashGenerator: HashGenerator,
   ) {}
 
@@ -29,9 +34,9 @@ export class RegisterAdminUseCase {
   ): Promise<RegisterAdminUseCaseResponse> {
     const { email, name, password } = request
 
-    const adminWithSameEMail = await this.adminsRepository.findByEmail(email)
+    const adminWithSameEmail = await this.adminsRepository.findByEmail(email)
 
-    if (adminWithSameEMail) {
+    if (adminWithSameEmail) {
       return left(new UserAlreadyExistsError(email))
     }
 

@@ -1,13 +1,11 @@
-import { Either, left, right } from '@/core/either'
-import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { inject, injectable } from 'tsyringe'
 
-import { DishImage } from '../../enterprise/entities/dish-image'
-import { DishImagesRepository } from '../repositories/dish-images-repository'
+import { Either, left, right } from '@/core/either'
+
 import { Uploader } from '../storage/uploader'
 import { InvalidImageTypeError } from './errors/invalid-image-type-error'
 
 interface UploadDishImageUseCaseRequest {
-  dishId: string
   fileName: string
   fileType: string
   body: Buffer
@@ -16,20 +14,21 @@ interface UploadDishImageUseCaseRequest {
 type UploadDishImageUseCaseResponse = Either<
   InvalidImageTypeError,
   {
-    dishImage: DishImage
+    imageUrl: string
   }
 >
 
+@injectable()
 export class UploadDishImageUseCase {
   constructor(
-    private dishImagesRepository: DishImagesRepository,
+    @inject('Uploader')
     private uploader: Uploader,
   ) {}
 
   async execute(
     request: UploadDishImageUseCaseRequest,
   ): Promise<UploadDishImageUseCaseResponse> {
-    const { fileName, fileType, body, dishId } = request
+    const { fileName, fileType, body } = request
 
     const isValidFileType = /^image\/(?:jpeg|png|webp)$/.test(fileType)
 
@@ -43,16 +42,8 @@ export class UploadDishImageUseCase {
       body,
     })
 
-    const dishImage = DishImage.create({
-      title: fileName,
-      url,
-      dishId: new UniqueEntityID(dishId),
-    })
-
-    await this.dishImagesRepository.create(dishImage)
-
     return right({
-      dishImage,
+      imageUrl: url,
     })
   }
 }
