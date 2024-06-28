@@ -2,18 +2,17 @@ import { inject, injectable } from 'tsyringe'
 
 import { Either, right } from '@/core/either'
 
-import { Dish } from '../../enterprise/entities/dish'
+import { DishDetails } from '../../enterprise/entities/value-objects/dish-details'
 import { DishesRepository } from '../repositories/dishes-repository'
 
 interface FetchDishesUseCaseRequest {
-  query: string
-  page: number
+  query?: string
 }
 
 type FetchDishesUseCaseResponse = Either<
   null,
   {
-    dishes: Dish[]
+    dishes: DishDetails[]
   }
 >
 
@@ -24,11 +23,12 @@ export class FetchDishesUseCase {
     private dishesRepository: DishesRepository,
   ) {}
 
-  async execute({
-    query,
-    page,
-  }: FetchDishesUseCaseRequest): Promise<FetchDishesUseCaseResponse> {
-    const dishes = await this.dishesRepository.findManyByQuery(query, page)
+  async execute(
+    request: FetchDishesUseCaseRequest,
+  ): Promise<FetchDishesUseCaseResponse> {
+    const { query } = request
+
+    const dishes = await this.dishesRepository.searchManyWithDetails(query)
 
     return right({
       dishes,

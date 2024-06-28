@@ -2,7 +2,7 @@ import { inject, injectable } from 'tsyringe'
 
 import { Either, left, right } from '@/core/either'
 
-import { Dish } from '../../enterprise/entities/dish'
+import { DishDetails } from '../../enterprise/entities/value-objects/dish-details'
 import { DishesRepository } from '../repositories/dishes-repository'
 import { ResourceNotFoundError } from './errors/resource-not-found-error'
 
@@ -13,7 +13,7 @@ interface GetDishUseCaseRequest {
 type GetDishUseCaseResponse = Either<
   ResourceNotFoundError,
   {
-    dish: Dish
+    dish: DishDetails
   }
 >
 
@@ -29,7 +29,7 @@ export class GetDishUseCase {
   ): Promise<GetDishUseCaseResponse> {
     const { dishId } = request
 
-    const dish = await this.dishesRepository.findById(dishId)
+    const dish = await this.dishesRepository.findDetailsById(dishId)
 
     if (!dish) {
       return left(new ResourceNotFoundError())

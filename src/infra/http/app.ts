@@ -9,6 +9,6 @@ export const app = express()
 
 app.use(express.json())
 
+app.use('/images', express.static('tmp'))
 app.use(routes)
-
 app.use(errorHandler)

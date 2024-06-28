@@ -14,7 +14,8 @@ type DeleteDishUseCaseResponse = Either<ResourceNotFoundError, null>
 @injectable()
 export class DeleteDishUseCase {
   constructor(
-    @inject('DishesRepository') private dishesRepository: DishesRepository,
+    @inject('DishesRepository')
+    private dishesRepository: DishesRepository,
   ) {}
 
   async execute(

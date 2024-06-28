@@ -12,8 +12,6 @@ export function makeDish(
       name: faker.lorem.words(),
       description: faker.lorem.sentences(),
       priceInCents: faker.number.int(),
-      ingredients: ['alface', 'cebola'],
-      imageUrl: faker.internet.url(),
       ...override,
     },
     id,

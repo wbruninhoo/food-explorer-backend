@@ -12,9 +12,7 @@ export class FakeUploader implements Uploader {
   public uploads: Upload[] = []
 
   async upload({ fileName }: UploadParams): Promise<{ url: string }> {
-    const extension = fileName.split('.').pop()
-
-    const url = `${crypto.randomUUID()}${extension ? `.${extension}` : ''}`
+    const url = crypto.randomUUID()
 
     this.uploads.push({
       fileName,

@@ -2,6 +2,8 @@ import { inject, injectable } from 'tsyringe'
 
 import { Either, left, right } from '@/core/either'
 
+import { Image } from '../../enterprise/entities/image'
+import { ImagesRepository } from '../repositories/images-repository'
 import { Uploader } from '../storage/uploader'
 import { InvalidImageTypeError } from './errors/invalid-image-type-error'
 
@@ -14,13 +16,15 @@ interface UploadDishImageUseCaseRequest {
 type UploadDishImageUseCaseResponse = Either<
   InvalidImageTypeError,
   {
-    imageUrl: string
+    image: Image
   }
 >
 
 @injectable()
 export class UploadDishImageUseCase {
   constructor(
+    @inject('ImagesRepository')
+    private imagesRepository: ImagesRepository,
     @inject('Uploader')
     private uploader: Uploader,
   ) {}
@@ -42,8 +46,15 @@ export class UploadDishImageUseCase {
       body,
     })
 
+    const image = Image.create({
+      title: fileName,
+      url,
+    })
+
+    await this.imagesRepository.create(image)
+
     return right({
-      imageUrl: url,
+      image,
     })
   }
 }

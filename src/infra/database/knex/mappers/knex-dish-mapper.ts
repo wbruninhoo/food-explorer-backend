@@ -9,8 +9,6 @@ export class KnexDishMapper {
         categoryId: new UniqueEntityID(raw.category_id),
         name: raw.name,
         description: raw.description,
-        ingredients: raw.ingredients,
-        imageUrl: raw.image_url,
         priceInCents: raw.price_in_cents,
         createdAt: raw.created_at,
         updatedAt: raw.updated_at,
@@ -20,13 +18,16 @@ export class KnexDishMapper {
   }
 
   static toKnex(dish: Dish): KnexDish {
+    if (!dish.image) {
+      throw new Error('Invalid dish type.')
+    }
+
     return {
       id: dish.id.toString(),
       category_id: dish.categoryId.toString(),
+      image_id: dish.image.imageId.toString(),
       name: dish.name,
       description: dish.description,
-      ingredients: dish.ingredients,
-      image_url: dish.imageUrl,
       price_in_cents: dish.priceInCents,
       created_at: dish.createdAt,
       updated_at: dish.updatedAt,

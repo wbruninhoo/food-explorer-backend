@@ -2,60 +2,36 @@ import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
 
+import { DishImage } from './dish-image'
+import { DishIngredientList } from './dish-ingredient-list'
+
 export interface DishProps {
-  dishId?: UniqueEntityID
-  imageUrl: string
   categoryId: UniqueEntityID
+  image?: DishImage | null
+  ingredients: DishIngredientList
   name: string
   description: string
   priceInCents: number
-  ingredients: string[]
   createdAt: Date
   updatedAt?: Date | null
 }
 
 export class Dish extends Entity<DishProps> {
-  get dishId() {
-    return this.props.dishId
-  }
-
-  get imageUrl() {
-    return this.props.imageUrl
-  }
-
-  set imageUrl(value: string) {
-    this.props.imageUrl = value
-    this.touch()
-  }
-
   get categoryId() {
     return this.props.categoryId
   }
 
-  get name() {
-    return this.props.name
-  }
-
-  set name(value: string) {
-    this.props.name = value
+  set categoryId(categoryId: UniqueEntityID) {
+    this.props.categoryId = categoryId
     this.touch()
   }
 
-  get description() {
-    return this.props.description
+  get image() {
+    return this.props.image
   }
 
-  set description(value: string) {
-    this.props.description = value
-    this.touch()
-  }
-
-  get priceInCents() {
-    return this.props.priceInCents
-  }
-
-  set priceInCents(value: number) {
-    this.props.priceInCents = value
+  set image(image: DishImage | null | undefined) {
+    this.props.image = image
     this.touch()
   }
 
@@ -63,8 +39,35 @@ export class Dish extends Entity<DishProps> {
     return this.props.ingredients
   }
 
-  set ingredients(value: string[]) {
-    this.props.ingredients = value
+  set ingredients(ingredients: DishIngredientList) {
+    this.props.ingredients = ingredients
+    this.touch()
+  }
+
+  get name() {
+    return this.props.name
+  }
+
+  set name(name: string) {
+    this.props.name = name
+    this.touch()
+  }
+
+  get description() {
+    return this.props.description
+  }
+
+  set description(description: string) {
+    this.props.description = description
+    this.touch()
+  }
+
+  get priceInCents() {
+    return this.props.priceInCents
+  }
+
+  set priceInCents(priceInCents: number) {
+    this.props.priceInCents = priceInCents
     this.touch()
   }
 
@@ -80,10 +83,14 @@ export class Dish extends Entity<DishProps> {
     this.props.updatedAt = new Date()
   }
 
-  static create(props: Optional<DishProps, 'createdAt'>, id?: UniqueEntityID) {
+  static create(
+    props: Optional<DishProps, 'ingredients' | 'createdAt'>,
+    id?: UniqueEntityID,
+  ) {
     const dish = new Dish(
       {
         ...props,
+        ingredients: props.ingredients ?? new DishIngredientList(),
         createdAt: props.createdAt ?? new Date(),
       },
       id,

@@ -16,7 +16,7 @@ describe('Create Category', () => {
 
   it('should be able to create a new category', async () => {
     const result = await sut.execute({
-      name: 'Refeições',
+      name: 'Bebidas',
     })
 
     expect(result.isRight()).toBe(true)
@@ -28,12 +28,12 @@ describe('Create Category', () => {
   it('should return category if already exists', async () => {
     inMemoryCategoriesRepository.items.push(
       makeCategory({
-        name: 'Refeições',
+        name: 'Bebidas',
       }),
     )
 
     const result = await sut.execute({
-      name: 'Refeições',
+      name: 'Bebidas',
     })
 
     expect(result.isRight()).toBe(true)

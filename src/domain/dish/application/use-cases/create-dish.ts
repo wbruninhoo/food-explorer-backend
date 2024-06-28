@@ -4,15 +4,17 @@ import { Either, right } from '@/core/either'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 
 import { Dish } from '../../enterprise/entities/dish'
+import { DishImage } from '../../enterprise/entities/dish-image'
+import { DishIngredient } from '../../enterprise/entities/dish-ingredient'
 import { DishesRepository } from '../repositories/dishes-repository'
 
 interface CreateDishUseCaseRequest {
+  categoryId: string
+  imageId: string
   name: string
   description: string
-  ingredients: string[]
   priceInCents: number
-  imageUrl: string
-  categoryId: string
+  ingredients: string[]
 }
 
 type CreateDishUseCaseResponse = Either<
@@ -25,28 +27,41 @@ type CreateDishUseCaseResponse = Either<
 @injectable()
 export class CreateDishUseCase {
   constructor(
-    @inject('DishesRepository') private dishesRepository: DishesRepository,
+    @inject('DishesRepository')
+    private dishesRepository: DishesRepository,
   ) {}
 
   async execute(
     request: CreateDishUseCaseRequest,
   ): Promise<CreateDishUseCaseResponse> {
     const {
-      name,
-      description,
-      ingredients,
-      priceInCents,
-      imageUrl,
       categoryId,
+      imageId,
+      description,
+      name,
+      priceInCents,
+      ingredients,
     } = request
 
     const dish = Dish.create({
+      categoryId: new UniqueEntityID(categoryId),
       name,
       description,
       priceInCents,
-      ingredients,
-      imageUrl,
-      categoryId: new UniqueEntityID(categoryId),
+    })
+
+    ingredients.forEach((ingredient) => {
+      const dishIngredient = DishIngredient.create({
+        dishId: dish.id,
+        name: ingredient,
+      })
+
+      dish.ingredients.add(dishIngredient)
+    })
+
+    dish.image = DishImage.create({
+      dishId: dish.id,
+      imageId: new UniqueEntityID(imageId),
     })
 
     await this.dishesRepository.create(dish)
