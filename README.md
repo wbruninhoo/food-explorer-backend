@@ -25,6 +25,12 @@
 
 Esta aplicação possui duas personas, o "admin" que pode gerenciar todos os pratos e o "cliente" que pode listar os pratos cadastrados e visualizar detalhes de algum prato.
 
+<p align="center">
+  <a href="https://food-explorer-backend-s33f.onrender.com">
+    <span>https://food-explorer-backend-s33f.onrender.com</span>
+  </a>
+</p>
+
 ## 🚀 Tecnologias
 
 Esse projeto foi desenvolvido com as seguintes tecnologias:
