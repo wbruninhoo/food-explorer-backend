@@ -3,6 +3,9 @@
 	"version": "1.0.0",
 	"description": "Food Explorer é um cardápio digital interativo, construído para um restaurante fictício.",
 	"main": "index.js",
+	"engines": {
+    "node": ">=18.18.0 <20.12.2"
+  },
 	"scripts": {
 		"build": "tsup src --out-dir build",
 		"start": "node dist/infra/http/server.js",
